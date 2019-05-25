@@ -8,8 +8,8 @@ resources:
   properties:
     description: "Deploy Cluster"
     zones:
-    - us-central1-a
-    - us-central1-b
+    - europe-west6-a
+    - europe-west6-b
     initialNodeCount: 1
     minNodeCount: 1
     maxNodeCount: 4
