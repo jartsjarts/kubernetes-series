@@ -1,0 +1,32 @@
+resources:
+- name: {{ env['name'] }}-cluster
+  type: container.v1.cluster
+  properties:
+    zone: {{ properties['zones'][0] }}
+    cluster:
+      description: {{ properties['description'] }}
+      initialClusterVersion: '1.9.7-gke.6'
+      locations: {{ properties['zones'] }}
+      nodePools:
+      - name: {{ env['name'] }}-pool
+        initialNodeCount: {{ properties['initialNodeCount'] | default(1) }}
+        config:
+          machineType: {{ properties['machineType'] | default('n1-standard-1') }}
+          oauthScopes:
+          - https://www.googleapis.com/auth/cloud-platform
+          - https://www.googleapis.com/auth/compute
+          - https://www.googleapis.com/auth/devstorage.read_only
+          - https://www.googleapis.com/auth/logging.write
+          - https://www.googleapis.com/auth/monitoring
+          preemptible: true
+        autoscaling:
+          enabled: true
+          minNodeCount: {{ properties['minNodeCount'] | default(1) }}
+          maxNodeCount: {{ properties['maxNodeCount'] | default(3) }}
+        management:
+          autoUpgrade: true
+          autoRepair: true
+          
+outputs:
+- name: clusterName
+  value: $(ref.{{ env['name'] }}-cluster.name)
